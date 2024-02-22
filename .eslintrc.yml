@@ -1,0 +1,96 @@
+root: true
+env:
+    browser: true
+    es2021: true
+    es6: true
+extends:
+    - '@remix-run/eslint-config'
+    - '@remix-run/eslint-config/node'
+    - 'eslint:recommended'
+    - plugin:tailwindcss/recommended
+    - 'prettier'
+parser: '@typescript-eslint/parser'
+plugins:
+    - 'drizzle'
+    - 'tailwindcss'
+settings:
+    'import/resolver':
+        typescript: true
+overrides:
+    - env:
+          node: true
+      files:
+          - '.eslintrc.{js,cjs}'
+      parserOptions:
+          sourceType: 'script'
+
+    - files:
+        - '**/*.{js,jsx,ts,tsx}'
+      plugins:
+        - react
+        - jsx-a11y
+      extends:
+        - plugin:react/recommended
+        - plugin:react/jsx-runtime
+        - plugin:react-hooks/recommended
+        - plugin:jsx-a11y/recommended
+      settings:
+        react:
+          version: detect
+        formComponents:
+          - Form
+        linkComponents:
+          - name: Link
+            linkAttribute: to
+          - name: NavLink
+            linkAttribute: to
+        import/resolver:
+          typescript: {}
+parserOptions:
+    ecmaVersion: 'latest'
+    sourceType: 'module'
+    ecmaFeatures:
+      jsx: true
+rules:
+    'import/no-restricted-paths':
+        - 'error'
+        - zones:
+              # Domain層が依存してはいけない領域
+              - from: './app/usecase/**/*'
+                target: './app/models/**/!(*.spec.ts|*.test.ts)'
+                message: 'Do not import the Application layer in the Domain layer.'
+              - from: './app/presentation/**/*'
+                target: './app/models/**/!(*.spec.ts|*.test.ts)'
+                message: 'Do not import the Presentation layer in the Domain layer.'
+              - from: './app/db/**/*!(test).ts'
+                target: './app/models/**/!(*.spec.ts|*.test.ts)'
+                message: 'Do not import the Infrastructure layer in the Domain layer.'
+    '@typescript-eslint/no-unused-vars': 'warn'
+    no-unused-vars: off
+    'drizzle/enforce-delete-with-where': 'error'
+    'drizzle/enforce-update-with-where': 'error'
+    import/order:
+        - 'error'
+        - groups:
+              - 'builtin'
+              - 'external'
+              - 'parent'
+              - 'sibling'
+              - 'index'
+              - 'object'
+              - 'type'
+          pathGroups:
+              - pattern: '{react,react-dom/**,react-router-dom}'
+                group: 'builtin'
+                position: 'before'
+              - pattern: '@app/**'
+                group: 'parent'
+                position: 'before'
+          pathGroupsExcludedImportTypes:
+              - 'builtin'
+          alphabetize:
+              order: 'asc'
+          newlines-between: 'always'
+    '@typescript-eslint/consistent-type-imports':
+        - 'error'
+        - prefer: 'type-imports'
