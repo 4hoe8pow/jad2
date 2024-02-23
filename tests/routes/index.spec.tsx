@@ -5,5 +5,5 @@ import Index from '~/routes/_index'
 
 test('test1', () => {
     render(<Index />)
-    expect(screen.getByText('Welcome to Remix')).toBeInTheDocument()
+    expect(screen.getByText('Welcome to Remix!')).toBeInTheDocument()
 })
