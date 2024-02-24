@@ -4,6 +4,7 @@ import { useTheme } from 'remix-themes'
 
 import { cn } from '../lib/utils'
 
+import { ModeToggle } from './mode-toggle'
 import {
     NavigationMenu,
     NavigationMenuList,
@@ -111,6 +112,7 @@ const JadHeader = () => {
                     </NavigationMenuLink>
                 </NavigationMenuItem>
             </NavigationMenuList>
+            <ModeToggle />
         </NavigationMenu>
     )
 }
