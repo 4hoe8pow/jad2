@@ -2,7 +2,7 @@ import { LoaderFunctionArgs } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 import { createClient } from '@supabase/supabase-js'
 
-export const loader = async ({  context }: LoaderFunctionArgs) => {
+export const loader = async ({ context }: LoaderFunctionArgs) => {
     const supabase = createClient(
         context.cloudflare.env.SUPABASE_URL!,
         context.cloudflare.env.SUPABASE_ANON_KEY!

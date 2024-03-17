@@ -37,7 +37,6 @@ export function App() {
     const { sessionTheme, env } = useLoaderData<typeof loader>()
     const [theme] = useTheme()
 
-
     const [supabase] = useState(() => createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY))
     return (
         <html lang="en" className={clsx(theme)}>
