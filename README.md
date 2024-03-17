@@ -16,13 +16,11 @@ pnpm add -D prettier eslint-config-prettier prettier-plugin-tailwindcss eslint e
 pnpm add tsyringe reflect-metadata
 ```
 
-### Drizzle
-
-better-sqliteは不要
+### Prisma
 
 ```sh
-pnpm add drizzle-orm
-pnpm -D drizzle-kit
+pnpm add @prisma/client
+pnpm add -D prisma
 ```
 
 ### Tailwind

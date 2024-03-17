@@ -16,31 +16,41 @@ import { themeSessionResolver } from './sessions.server'
 import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/cloudflare'
 
 import styles from '~/presentation/tailwind.css'
+import { createClient } from '@supabase/supabase-js'
+import { useState } from 'react'
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
     const { getTheme } = await themeSessionResolver(request)
+    const env = {
+        SUPABASE_URL: context.cloudflare.env.SUPABASE_URL!,
+        SUPABASE_ANON_KEY: context.cloudflare.env.SUPABASE_ANON_KEY!,
+    }
     return {
-        theme: getTheme(),
+        sessionTheme: getTheme(),
+        env,
     }
 }
 
 export function App() {
-    const data = useLoaderData<typeof loader>()
+    const { sessionTheme, env } = useLoaderData<typeof loader>()
     const [theme] = useTheme()
+
+
+    const [supabase] = useState(() => createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY))
     return (
         <html lang="en" className={clsx(theme)}>
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <Meta />
-                <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
+                <PreventFlashOnWrongTheme ssrTheme={Boolean(sessionTheme)} />
                 <Links />
             </head>
             <body>
                 <JadHeader />
-                <Outlet />
+                <Outlet context={{ supabase }} />
                 <ScrollRestoration />
                 <Scripts />
                 <LiveReload />
@@ -50,9 +60,9 @@ export function App() {
 }
 
 export default function AppWithProviders() {
-    const data = useLoaderData<typeof loader>()
+    const { sessionTheme } = useLoaderData<typeof loader>()
     return (
-        <ThemeProvider specifiedTheme={data.theme} themeAction="/action/set-theme">
+        <ThemeProvider specifiedTheme={sessionTheme} themeAction="/action/set-theme">
             <App />
         </ThemeProvider>
     )

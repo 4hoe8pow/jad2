@@ -9,3 +9,5 @@ node_modules
 .dev.vars
 
 .wrangler
+.env.local
+.dev.vars
